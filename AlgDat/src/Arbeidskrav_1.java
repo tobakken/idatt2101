@@ -1,4 +1,4 @@
-public class Main {
+public class Arbeidskrav_1 {
     public static void main(String[] args) {
         int[] change = {-1, 3, -9, 2, 2, -1, 2, -1, -5};
 
