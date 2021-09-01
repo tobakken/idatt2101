@@ -3,15 +3,14 @@ import java.util.Random;
 
 public class Arbeidskrav_1 {
     public static void main(String[] args) {
-        //int[] change = {-1, 3, -9, 2, 2, -1, -2, -1, 5};
-
+        //int[] change = {-1, 0, -9, -1, 2, -1, 2, -1, 5};
         //Lager en array med tilfeldige tall mellom -10 og 10 som representerer endringen i aksjekurs fra dag til dag.
         //nSize bestemmer størrelsen på arrayen.
         //Bruker den innebygde Random-funksjonen til Java, men denne gir problemer med større nSize. Algoritmen jeg
         // bruker er likevel såpass treig at jeg ikke kommer opp i store nok n-verdier til at det gir for ulogiske svar.
         Random rand = new Random();
         int nSize = 1000000;
-        System.out.println("N-size: " + nSize + "\n");
+        System.out.println("N-size: " + nSize);
         int [] change = new int[nSize];
         for (int i = 0; i < nSize; i++) {
             change[i] = (rand.nextInt(21) - 10);
@@ -20,7 +19,7 @@ public class Arbeidskrav_1 {
         Date start = new Date();
         System.out.println(stockCheck(change));
         Date slutt = new Date();
-        System.out.println(slutt.getTime() - start.getTime());
+        System.out.println("Runtime in milliseconds: " + (slutt.getTime() - start.getTime()));
     }
 
     /*
@@ -38,7 +37,7 @@ public class Arbeidskrav_1 {
 
         for (int i = 0; i < priceChange.length; i++) { //O(n)
             price += priceChange[i];
-            for (int j = i; j < (priceChange.length - i); j++) { //O(n)
+            for (int j = i; j < (priceChange.length); j++) { //O(n)
                 priceCheck += priceChange[j];
                 sum = priceCheck - price;
                 if (sum > bestSum) {
