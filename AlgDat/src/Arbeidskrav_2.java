@@ -10,17 +10,17 @@ public class Arbeidskrav_2 {
         double tid;
         Date slutt;
         do {
-            Double r = Math.pow(xValue, nValue);
+            Double r = exponentCalc(xValue, nValue);
             slutt = new Date();
             ++runder;
         } while (slutt.getTime()-start.getTime() < 1000);
         tid = (double)
                 (slutt.getTime()-start.getTime()) / runder;
         System.out.printf("Millisekund pr. runde: %.7f%n", tid);
-        System.out.println(String.format(xValue + "^" + nValue + " = %.7f%n", Math.pow(xValue, nValue)));
+        System.out.printf(xValue + "^" + nValue + " = %.7f%n%n", exponentCalc(xValue, nValue));
     }
 
-
+    //Algoritme oppg 2.1-1
     public static double exponentCalc(double x, int exp) {
         if (exp == 0) {
             return 1;
@@ -29,6 +29,7 @@ public class Arbeidskrav_2 {
         }
     }
 
+    //Algoritme oppg 2.2-3
     public static double exponentCalc2(double x, int exp) {
         if (exp == 0) {
             return 1;
