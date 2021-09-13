@@ -5,7 +5,11 @@ import java.util.Random;
 public class Arbeidskrav_3 {
     public static void main(String[] args) {
 
-        int tabellsize = 1000000;
+/*        int [] testTabell = {5,2,7,6,8,9};
+        boblesort(testTabell);
+        System.out.println(Arrays.toString(testTabell));*/
+
+        int tabellsize = 20;
 
         Random rand = new Random();
         int [] tabell = new int[tabellsize];
@@ -23,7 +27,7 @@ public class Arbeidskrav_3 {
         System.out.println(sum(tabell));
 
         System.out.println("\n" + tabellTestRiktigSortert(tabellKopi1));
-        System.out.println(tidtakingImprovedQS(tabellKopi1, tabellsize, 1000));
+        System.out.println(tidtakingImprovedQS(tabellKopi1, tabellsize, 10));
         System.out.println(sum(tabellKopi1));
     }
 
@@ -40,7 +44,7 @@ public class Arbeidskrav_3 {
     //Tidtaking av quicksort med hjelpemetode
     private static String tidtakingImprovedQS(int [] tabell, int size, int brytRekSize){
         Date start = new Date();
-        quicksortImproved(tabell, 0, size-1, brytRekSize);
+        quicksortImproved(tabell, 0, size-1);
         Date slutt = new Date();
         Double tid = (double)
                 (slutt.getTime()-start.getTime());
@@ -74,12 +78,12 @@ public class Arbeidskrav_3 {
     }
 
     //Quicksort med annen algoritme for små deltabeller
-    public static void quicksortImproved(int []t, int v, int h, int bryt){
-        if (h - v > bryt){
+    public static void quicksortImproved(int []t, int v, int h){
+        if (h - v > 10){
             int delepos = splitt(t, v, h);
-            quicksort(t, v, delepos - 1);
-            quicksort(t, delepos + 1, h);
-        } else boblesort(t);
+            quicksortImproved(t, v, delepos - 1);
+            quicksortImproved(t, delepos + 1, h);
+        } else boblesort(t, h, v);
     }
 
     private static int splitt(int []t, int v, int h){
@@ -97,8 +101,8 @@ public class Arbeidskrav_3 {
         return iv;
     }
 
-    public static void boblesort(int[] t){
-        for (int i = t.length -1; i>0; --i) {
+    public static void boblesort(int[] t, int start, int stop){
+        for (int i = start -1; i>stop; --i) {
             for (int j = 0; j < i; j++) {
                 if (t[j] > t[j+1]){
                     bytt(t, j, j+1);
