@@ -1,6 +1,6 @@
 package Arbeidskrav_4;
 
-public class Main {
+public class MainOppgave1 {
     public static void main(String[] args) {
         System.out.println("Den trygge plassen er: " + josephus(10, 4));
     }
