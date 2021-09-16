@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class MainOppgave2 {
     public static void main(String[] args) {
-        String filSomSjekkes = lesJavafil("TestDeloppg2.java");
+        String filSomSjekkes = lesJavafil("TestFile.txt");
         parantesSjekk(filSomSjekkes);
     }
 
