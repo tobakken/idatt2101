@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 
 public class MainOppgave2 {
     public static void main(String[] args) {
-        String filSomSjekkes = lesJavafil("TestFile.txt");
+        String filSomSjekkes = lesFil("TestFile.txt");
         parantesSjekk(filSomSjekkes);
     }
 
     public static void parantesSjekk(String sjekk) {
         Stack<String> stakk = new Stack<>();
+        boolean feilFunnet = false;
 
         for (int i = 0; i < sjekk.length(); i++) {
             String checkChar = Character.toString(sjekk.charAt(i));
@@ -29,6 +30,7 @@ public class MainOppgave2 {
                                 stakk.pop();
                             } else {
                                 System.out.println("For mange: " + stakk.peek());
+                                feilFunnet = true;
                             }
                         } else {
                             System.out.println("For mange: )");
@@ -43,6 +45,7 @@ public class MainOppgave2 {
                             }
                         } else {
                             System.out.println("For mange: }");
+                            feilFunnet = true;
                         }
                         break;
                     case "]":
@@ -54,6 +57,7 @@ public class MainOppgave2 {
                             }
                         } else {
                             System.out.println("For mange: ]");
+                            feilFunnet = true;
                         }
                         break;
                     default:
@@ -61,12 +65,14 @@ public class MainOppgave2 {
                 }
             }
         }
-        if (stakk.empty()) {
+        if (stakk.empty() && !feilFunnet) {
             System.out.println("Alt bra");
+        } else if (!feilFunnet){
+            System.out.println("Mangler lukkende parentes");
         }
     }
 
-    public static String lesJavafil(String filnavn) {
+    public static String lesFil(String filnavn) {
         InputStream is = MainOppgave2.class.getResourceAsStream(filnavn);
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
     }
