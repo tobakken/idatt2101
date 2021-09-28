@@ -5,13 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 
 
-public class Arbeidskrav_5 {
+public class AK5OPPG1 {
     public static void main(String[] args) {
         int count = 0;
         int m = 128;
         HashTabell ht = new HashTabell(m);
         String line;
-        File file = new File("src/Arbeidskrav_5/navn.txt");
+        File file = new File("./navn.txt");
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
             while ((line = br.readLine()) != null){
                 Navn navn = new Navn(line);
