@@ -11,15 +11,18 @@ public class AK5OPPG2 {
         HashTabellKvadratiskProbing htKvad = new HashTabellKvadratiskProbing(m);
         HashTabellDobbelHash htDob = new HashTabellDobbelHash(m);
 
-        double stopp = m>>1;
+        double stopp = m;
+        Date start = new Date();
         for (int i = 0; i <stopp; i++) {
-            htDob.leggTil(originalTabell[i]);
+            htKvad.leggTil(originalTabell[i]);
             //System.out.println(originalTabell[i]);
         }
+        Date stop = new Date();
 
-        float kollisjoner = htDob.kollisjoner;
-        System.out.println(kollisjoner/stopp);
-        System.out.println("Fyllingsgrad: " + stopp/m);
+        float kollisjoner = htKvad.kollisjoner;
+        System.out.printf("Antall kollisjoner pr innsetting: %.4f", kollisjoner/stopp);
+        System.out.println("\nFyllingsgrad: " + stopp/m);
+        System.out.println("Tidsbruk i millisekunder: " + (stop.getTime()- start.getTime()));
 
     }
     public static int[] fyllMedRandom(int m){
@@ -27,7 +30,8 @@ public class AK5OPPG2 {
         int[] tabell = new int[m];
         tabell[0] = 1;
         for (int i = 0; i < tabell.length-1; i++) {
-            tabell[i+1] = tabell[i]+ rand.nextInt(10);
+            //Legger til tilfeldig tall mellom 1 og 10 til forrige tall for å få kun unike verdier.
+            tabell[i+1] = tabell[i]+ (rand.nextInt(9)+1);
         }
         for (int i = 0; i < tabell.length; i++) {
             int randomIndex = rand.nextInt(tabell.length);
@@ -99,7 +103,7 @@ class HashTabellKvadratiskProbing {
     }
 
     private int probeKvadratisk(int h, int i, int m){
-        return (h + 3*i + 5*(i*i)) % m;
+        return Math.abs(h + 3*i + 5*(i*i)) % m;
     }
 }
 

@@ -41,7 +41,6 @@ public class AK5OPPG1 {
         float v = count;
         System.out.println("Kollisjoner pr person: " + (ht.kollisjoner/v));
         System.out.println("Lastfaktoren er " + (v/m));
-        System.out.println(tpb.hash(m));
     }
 }
 
