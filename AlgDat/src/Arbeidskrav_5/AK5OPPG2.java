@@ -11,7 +11,7 @@ public class AK5OPPG2 {
         HashTabellKvadratiskProbing htKvad = new HashTabellKvadratiskProbing(m);
         HashTabellDobbelHash htDob = new HashTabellDobbelHash(m);
 
-        double stopp = m;
+        double stopp = m>>1;
         Date start = new Date();
         for (int i = 0; i <stopp; i++) {
             htKvad.leggTil(originalTabell[i]);
