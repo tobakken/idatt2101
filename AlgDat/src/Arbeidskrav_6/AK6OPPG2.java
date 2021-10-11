@@ -8,52 +8,52 @@ import java.util.ArrayList;
 
 public class AK6OPPG2 {
     public static void main(String[] args) {
-        Graf graf;
-        ArrayList<String []> splitt = lesFil("L7g5");
-        graf = new Graf(Integer.parseInt(splitt.get(0)[0]));
-        for (int i = 1; i < splitt.size(); i++) {
-            graf.leggTilKanter(Integer.parseInt(splitt.get(i)[0]), Integer.parseInt(splitt.get(i)[1]));
+        GraphOppg2 graf;
+        ArrayList<String []> split = readFile("L7g5");
+        graf = new GraphOppg2(Integer.parseInt(split.get(0)[0]));
+        for (int i = 1; i < split.size(); i++) {
+            graf.addEdge(Integer.parseInt(split.get(i)[0]), Integer.parseInt(split.get(i)[1]));
         }
 
-        Node topores = graf.toposort();
+        NodeOppg2 topores = graf.toposort();
 
         for (int i = 0; i < graf.node.length; i++) {
             System.out.print(" " + topores);
-            topores = topores.neste;
+            topores = topores.next;
         }
     }
 
-    public static ArrayList<String[]> lesFil(String filnavn){
+    public static ArrayList<String[]> readFile(String filnavn){
         String line;
-        ArrayList<String[]> splitt = new ArrayList<>();
+        ArrayList<String[]> split = new ArrayList<>();
         File file = new File("./" + filnavn + ".txt");
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             while ((line = br.readLine()) != null) {
                 String trimmet = line.trim();
-                splitt.add(trimmet.split("\\s+"));
+                split.add(trimmet.split("\\s+"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return splitt;
+        return split;
     }
 }
 
-class Node {
+class NodeOppg2 {
     int element;
-    ArrayList<Node> kanter;
-    boolean funnet;
-    Node neste;
+    ArrayList<NodeOppg2> neighbours;
+    boolean found;
+    NodeOppg2 next;
 
-    public Node(int n) {
+    public NodeOppg2(int n) {
         element = n;
-        funnet = false;
-        kanter = new ArrayList<>();
+        found = false;
+        neighbours = new ArrayList<>();
     }
 
-    public void setKanter(Node k) {
-        if (!kanter.contains(k)) {
-            kanter.add(k);
+    public void setNeighbours(NodeOppg2 k) {
+        if (!neighbours.contains(k)) {
+            neighbours.add(k);
         }
     }
 
@@ -63,40 +63,40 @@ class Node {
     }
 }
 
-class Graf {
-    Node[] node;
+class GraphOppg2 {
+    NodeOppg2[] node;
 
-    public Graf(int size) {
-        node = new Node[size];
-        //Initialiserer med alle noder
+    public GraphOppg2(int size) {
+        node = new NodeOppg2[size];
+        //Initialises all nodes
         for (int i = 0; i < size; i++) {
-            node[i] = new Node(i);
+            node[i] = new NodeOppg2(i);
         }
     }
 
-    private Node toposortHjelp(Node n, Node l) {
-        if (n.funnet) return l;
-        for (int i = 0; i < n.kanter.size(); i++) {
-            Node sjekk = n.kanter.get(i);
-            l = toposortHjelp(sjekk, l);
+    private NodeOppg2 toposortHelp(NodeOppg2 n, NodeOppg2 l) {
+        if (n.found) return l;
+        for (int i = 0; i < n.neighbours.size(); i++) {
+            NodeOppg2 sjekk = n.neighbours.get(i);
+            l = toposortHelp(sjekk, l);
         }
-        n.funnet = true;
-        n.neste = l;
+        n.found = true;
+        n.next = l;
         return n;
     }
 
-    public Node toposort() {
-        Node l = null;
+    public NodeOppg2 toposort() {
+        NodeOppg2 l = null;
         for (int i = node.length; i-- > 0; ) {
-            l = toposortHjelp(node[i], l);
+            l = toposortHelp(node[i], l);
         }
         return l;
     }
 
 
-    public void leggTilKanter(int h, int n) {
-        Node hode = node[h];
-        Node neste = node[n];
-        hode.setKanter(neste);
+    public void addEdge(int h, int n) {
+        NodeOppg2 head = node[h];
+        NodeOppg2 next = node[n];
+        head.setNeighbours(next);
     }
 }
