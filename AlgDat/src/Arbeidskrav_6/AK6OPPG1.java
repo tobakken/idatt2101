@@ -6,10 +6,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * @Author Jonathhl
+ **/
+
 public class AK6OPPG1 {
     public static void main(String[] args) {
         Graph g = null;
-        try(BufferedReader br = new BufferedReader(new FileReader("./L7g5.txt"))) {
+        try(BufferedReader br = new BufferedReader(new FileReader("./L7g2.txt"))) {
+
+            /*
+            StringTokenizer line = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(line.nextToken());
+            g = new Graph(N);
+            while(br.ready()) {
+                line = new StringTokenizer(br.readLine());
+                g.addEdge(Integer.parseInt(line.nextToken()), Integer.parseInt(line.nextToken()));
+            }
+
+            Legger ved String tokenizer koden min, den fungerer helt identisk til den under. Jeg vil bare heller
+            bruke og øve på regex, da tokenizer er deprecated.
+             */
 
             String line = br.readLine();
             String[] readNum = line.trim().split("\\s+");
@@ -18,15 +35,20 @@ public class AK6OPPG1 {
                 readNum = line.trim().split("\\s+");
                 g.addEdge(Integer.parseInt(readNum[0]), Integer.parseInt(readNum[1]));
             }
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(g.toString());
-
         g.BFS(0); // Startnode
         sortByDist(g.info, 2);
+        // System.out.println("Node: " +g.info[21][0] + " Forgj: "+ g.info[21][1] + " Dist "+ g.info[21][2]);
+        // Bruker for å søke i Skandinavia grafen.
+
+        System.out.println(g.toString());
+        // Printline her funker ikke noe bra når Skandinavia filen leses...
+
 
         System.out.println("Node  Forgj  Dist");
 
@@ -47,19 +69,6 @@ public class AK6OPPG1 {
                 return 0;
             }
         });
-    }
-}
-
-class Node {
-    Node next;
-    int value;
-
-    public Node(int v) {
-        this.value = v;
-    }
-
-    public String toString() {
-        return this.value + " ";
     }
 }
 
@@ -156,6 +165,19 @@ class LinkedList {
     }
 }
 
+class Node {
+    Node next;
+    int value;
+
+    public Node(int v) {
+        this.value = v;
+    }
+
+    public String toString() {
+        return this.value + " ";
+    }
+}
+
 class Stack {
 
     ArrayList<Integer> stack;
@@ -168,12 +190,6 @@ class Stack {
         stack.add(n);
     }
 
-    public void pop(int n) {
-        if(!empty()) {
-            stack.remove(n);
-        }
-    }
-
     public boolean empty() { return stack.size() == 0; }
 
     public int next() {
@@ -182,13 +198,7 @@ class Stack {
         return x;
     }
 
-    public ArrayList<Integer> getStack() {
-        return stack;
-    }
-
     public String toString() {
         return this.stack + " ";
     }
 }
-
-
