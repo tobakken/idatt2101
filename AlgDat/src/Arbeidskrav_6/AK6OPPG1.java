@@ -15,19 +15,6 @@ public class AK6OPPG1 {
         Graph g = null;
         try(BufferedReader br = new BufferedReader(new FileReader("./L7g2.txt"))) {
 
-            /*
-            StringTokenizer line = new StringTokenizer(br.readLine());
-            int N = Integer.parseInt(line.nextToken());
-            g = new Graph(N);
-            while(br.ready()) {
-                line = new StringTokenizer(br.readLine());
-                g.addEdge(Integer.parseInt(line.nextToken()), Integer.parseInt(line.nextToken()));
-            }
-
-            Legger ved String tokenizer koden min, den fungerer helt identisk til den under. Jeg vil bare heller
-            bruke og øve på regex, da tokenizer er deprecated.
-             */
-
             String line = br.readLine();
             String[] readNum = line.trim().split("\\s+");
             g = new Graph(Integer.parseInt(readNum[0]));
