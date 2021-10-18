@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-
+/**
+ * @Author tobakken
+ */
 public class AK6OPPG2 {
     public static void main(String[] args) {
         GraphOppg2 graf;
