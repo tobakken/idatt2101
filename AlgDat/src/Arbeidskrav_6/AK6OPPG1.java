@@ -65,7 +65,7 @@ class Node {
 
 class Graph {
 
-    LinkedList adjacent[];
+    LinkedList[] adjacent;
     int value;
     Stack s;
     int[][] info;
@@ -92,7 +92,7 @@ class Graph {
 
     public void BFS(int s) {
 
-        boolean visited[] = new boolean[value];
+        boolean[] visited = new boolean[value];
         Stack queue = new Stack();
         visited[s] = true;
         info[s][0] = s;
