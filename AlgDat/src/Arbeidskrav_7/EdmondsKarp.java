@@ -4,33 +4,42 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EdmondsKarp {
     public static void main(String[] args) {
 
+        Graph graph = readFile("flytgraf1");
+        System.out.println(graph);
+        graph.edmKarpVer2(0, 7);
+
     }
 
-    public static void readFile(String filnavn) {
+    public static Graph readFile(String filnavn) {
         String line;
         String[] readNum;
+        Graph graph = new Graph(0);
         File file = new File("./" + filnavn + ".txt");
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             //Read first line of file and initialize graph
             readNum = br.readLine().trim().split("\\s+");
-
+            graph = new Graph(Integer.parseInt(readNum[0]));
             //Read rest of file and add nodes/edges
             while ((line = br.readLine()) != null) {
-                readNum = br.readLine().trim().split("\\s+");
+                readNum = line.trim().split("\\s+");
+                graph.addEdge(Integer.parseInt(readNum[0]), Integer.parseInt(readNum[1]), Integer.parseInt(readNum[2]));
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Problem med å lese fil: " + filnavn);
         }
+        return graph;
     }
 }
 
 class Node {
     int element;
+    Node previous;
     ArrayList<Edge> edges;
     boolean visited;
     int distance;
@@ -54,41 +63,94 @@ class Node {
 }
 
 class Graph {
-    Node[] node;
+    int[][] node;
 
     public Graph(int size) {
-        node = new Node[size];
-        //Initialises all nodes
-        for (int i = 0; i < size; i++) {
-            node[i] = new Node(i);
-        }
+        node = new int[size][size];
     }
 
     public void addEdge(int h, int n, int cap) {
-        Node head = node[h];
-        Node next = node[n];
-        head.addEdge(next, cap);
+        if (cap > 0){
+            node[h][n] = cap;
+        }
     }
 
-    public void edmKarp(int s, int drain) {
+    public void edmKarpVer2(int source, int drain){
+        boolean[] visited = new boolean[node.length];
+        int[] parent = new int[node.length];
+        Stack queue = new Stack();
+        int increase = 10000000;
+        int current = source;
+        visited[source] = true;
+        queue.push(current);
+        while (!queue.empty() || current != drain){
+            current = queue.next();
+            for (int i = 0; i < node.length; i++) {
+                if (!visited[i] && node[current][i] > 0){
+                    visited[i] = true;
+                    queue.push(i);
+                    parent[i] = current;
+                }
+            }
+        }
+        String message = "";
+        for (int i = drain; i !=source ; i = parent[i]) {
+            if (increase > node[parent[i]][i]){
+                increase = node[parent[i]][i];
+            }
+        }
+        System.out.print(increase + "    " + source + " ");
+
+        for (int i = drain; i != source ; i = parent[i]) {
+            message = i + " " + message + " ";
+            node[parent[i]][i] -= increase;
+            node[i][parent[i]] += increase;
+        }
+
+        System.out.print(message);
+    }
+
+/*    public void edmKarp(int s, int drain) {
         Stack queue = new Stack();
         int increase = 1000000;
         int dist = 0;
         Node check = node[s];
+        Edge edgCheck;
         queue.push(s);
         check.visited = true;
-        while (!queue.empty() && !check.equals(node[drain])) {
+        while (!queue.empty() || !check.equals(node[drain])) {
             dist++;
             for (int i = check.edges.size(); --i > 0; ) {
-                check = check.edges.get(i).end;
-                check.distance = dist;
+                edgCheck = check.edges.get(i);
+                check = edgCheck.end;
                 if (!check.visited) {
                     queue.push(check.element);
                     check.visited = true;
+                    if (edgCheck.restCap()<increase){
+                        increase = edgCheck.restCap();
+                    }
                 }
+                check.distance = dist;
             }
             check = node[queue.next()];
         }
+    }*/
+
+/*    private int getCap(int head, int end){
+        return node[head][end];
+    }*/
+
+    @Override
+    public String toString() {
+        String msg = "";
+        for (int i = 0; i < node.length; i++) {
+            msg += i;
+            for (int j = 0; j < node.length; j++) {
+                msg += " " + node[i][j];
+            }
+            msg += "\n";
+        }
+        return msg;
     }
 }
 
