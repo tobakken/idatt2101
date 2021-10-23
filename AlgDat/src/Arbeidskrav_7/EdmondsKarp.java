@@ -70,75 +70,55 @@ class Graph {
     }
 
     public void addEdge(int h, int n, int cap) {
-        if (cap > 0){
+        if (cap > 0) {
             node[h][n] = cap;
         }
     }
 
-    public void edmKarpVer2(int source, int drain){
-        boolean[] visited = new boolean[node.length];
-        int[] parent = new int[node.length];
-        Stack queue = new Stack();
-        int increase = 10000000;
-        int current = source;
-        visited[source] = true;
-        queue.push(current);
-        while (!queue.empty() || current != drain){
-            current = queue.next();
-            for (int i = 0; i < node.length; i++) {
-                if (!visited[i] && node[current][i] > 0){
-                    visited[i] = true;
-                    queue.push(i);
-                    parent[i] = current;
-                }
-            }
-        }
-        String message = "";
-        for (int i = drain; i !=source ; i = parent[i]) {
-            if (increase > node[parent[i]][i]){
-                increase = node[parent[i]][i];
-            }
-        }
-        System.out.print(increase + "    " + source + " ");
-
-        for (int i = drain; i != source ; i = parent[i]) {
-            message = i + " " + message + " ";
-            node[parent[i]][i] -= increase;
-            node[i][parent[i]] += increase;
-        }
-
-        System.out.print(message);
-    }
-
-/*    public void edmKarp(int s, int drain) {
-        Stack queue = new Stack();
-        int increase = 1000000;
-        int dist = 0;
-        Node check = node[s];
-        Edge edgCheck;
-        queue.push(s);
-        check.visited = true;
-        while (!queue.empty() || !check.equals(node[drain])) {
-            dist++;
-            for (int i = check.edges.size(); --i > 0; ) {
-                edgCheck = check.edges.get(i);
-                check = edgCheck.end;
-                if (!check.visited) {
-                    queue.push(check.element);
-                    check.visited = true;
-                    if (edgCheck.restCap()<increase){
-                        increase = edgCheck.restCap();
+    public void edmKarpVer2(int source, int drain) {
+        boolean finished = false;
+        int countFlow = 0;
+        while (!finished){
+            boolean check = false;
+            boolean[] visited = new boolean[node.length];
+            int[] parent = new int[node.length];
+            Stack queue = new Stack();
+            int increase = 10000000;
+            int current = source;
+            visited[source] = true;
+            queue.push(current);
+            while (!queue.empty()) {
+                current = queue.next();
+                if (current == drain) check = true;
+                for (int i = 0; i < node.length; i++) {
+                    if (!visited[i] && node[current][i] > 0) {
+                        visited[i] = true;
+                        queue.push(i);
+                        parent[i] = current;
                     }
                 }
-                check.distance = dist;
             }
-            check = node[queue.next()];
-        }
-    }*/
+            if (!check) finished = true;
+            String message = "";
+            for (int i = drain; i != source; i = parent[i]) {
+                if (increase > node[parent[i]][i]) {
+                    increase = node[parent[i]][i];
+                }
+            }
+            countFlow += increase;
+            System.out.print(increase + "   " + source + " ");
 
-/*    private int getCap(int head, int end){
-        return node[head][end];
-    }*/
+            for (int i = drain; i != source; i = parent[i]) {
+                message = i + " " + message + " ";
+                node[parent[i]][i] -= increase;
+                node[i][parent[i]] += increase;
+            }
+            System.out.print(message + "\n");
+        }
+        System.out.println("Max flow: " + countFlow);
+
+    }
+
 
     @Override
     public String toString() {
