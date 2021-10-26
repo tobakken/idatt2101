@@ -4,14 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EdmondsKarp {
     public static void main(String[] args) {
 
         Graph graph = readFile("flytgraf1");
-        System.out.println(graph);
-        graph.edmKarpVer2(0, 7);
+        graph.edmKarp(0, 7);
 
     }
 
@@ -37,31 +35,6 @@ public class EdmondsKarp {
     }
 }
 
-class Node {
-    int element;
-    Node previous;
-    ArrayList<Edge> edges;
-    boolean visited;
-    int distance;
-
-
-    public Node(int n) {
-        element = n;
-        edges = new ArrayList<>();
-        visited = false;
-    }
-
-    public void addEdge(Node neighbour, int flow) {
-        edges.add(new Edge(neighbour, flow));
-        neighbour.edges.add(new Edge(this, 0));
-    }
-
-    @Override
-    public String toString() {
-        return "" + element;
-    }
-}
-
 class Graph {
     int[][] node;
 
@@ -75,7 +48,9 @@ class Graph {
         }
     }
 
-    public void edmKarpVer2(int source, int drain) {
+    public void edmKarp(int source, int drain) {
+        System.out.println("Maks flyt fra " + source + " til " + drain + " med Edmond-Karp");
+        System.out.println("Økning  flytøkende vei");
         boolean finished = false;
         int countFlow = 0;
         while (!finished){
@@ -90,6 +65,8 @@ class Graph {
             while (!queue.empty()) {
                 current = queue.next();
                 if (current == drain) check = true;
+                //Iterates through to see if edges have been visited and if they have capacity
+                //Add them to visited and queue if not. Set parent.
                 for (int i = 0; i < node.length; i++) {
                     if (!visited[i] && node[current][i] > 0) {
                         visited[i] = true;
@@ -107,7 +84,7 @@ class Graph {
             }
             countFlow += increase;
             if (increase > 0){
-                System.out.print(increase + "   " + source + " ");
+                System.out.print(increase + "     " + source + " ");
 
                 for (int i = drain; i != source; i = parent[i]) {
                     message = i + " " + message + " ";
@@ -134,21 +111,6 @@ class Graph {
             msg += "\n";
         }
         return msg;
-    }
-}
-
-class Edge {
-    Node end;
-    int flow;
-    int cap;
-
-    public Edge(Node e, int cap) {
-        this.end = e;
-        this.cap = cap;
-    }
-
-    public int restCap() {
-        return cap - flow;
     }
 }
 
