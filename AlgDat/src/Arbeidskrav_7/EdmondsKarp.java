@@ -106,14 +106,17 @@ class Graph {
                 }
             }
             countFlow += increase;
-            System.out.print(increase + "   " + source + " ");
+            if (increase > 0){
+                System.out.print(increase + "   " + source + " ");
 
-            for (int i = drain; i != source; i = parent[i]) {
-                message = i + " " + message + " ";
-                node[parent[i]][i] -= increase;
-                node[i][parent[i]] += increase;
+                for (int i = drain; i != source; i = parent[i]) {
+                    message = i + " " + message + " ";
+                    node[parent[i]][i] -= increase;
+                    node[i][parent[i]] += increase;
+                }
+                System.out.print(message + "\n");
             }
-            System.out.print(message + "\n");
+
         }
         System.out.println("Max flow: " + countFlow);
 
