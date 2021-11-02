@@ -1,4 +1,4 @@
-package Arbeidskrav_7;
+//package Arbeidskrav_7;
 
 import java.io.BufferedReader;
 import java.io.File;

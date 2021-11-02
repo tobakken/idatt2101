@@ -1,44 +1,42 @@
 package Arbeidskrav_8;
 
+import java.io.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 public class Compression {
     public static void main(String[] args) {
-        String test = "Problemer, problemer. Alltid problemer!\n" +
-                "Dette er dagens problem. Problemet er\n" +
-                "å komprimere problematisk tekst.";
 
 
-    }
-
-    public void find(String text){
-
-    }
-
-    public void boyerMoore(String text, String search){
-        int[] badMatchTable = badMatch(search);
-        int i = search.length() - 1;
-        int j = search.length() - 1;
-        while (i >= 0){
-            if (!(search.charAt(i) == text.charAt(j))){
-                j += badMatchTable[(int) search.charAt(i)];
-            }
-            i--;
-            j--;
-        }
-    }
-
-    public int[] badMatch(String search){
-        int rounds = 0;
-        int[] table = new int[256];
-        for (int i = search.length()-1; i >= 0 ; i--) {
-            for (int j = 97; j < 123; j++) {
-                if ((int) search.charAt(i) == j){
-                    table[j] = rounds;
-                } else {
-                    table[j] = search.length();
-                }
-            }
-            rounds++;
-        }
-        return table;
     }
 }
+
+
+
+class Bytes {
+    private static char[] data;
+    private static String text;
+
+    public Bytes(){
+
+    }
+
+    public static void readBytes(String path){
+        try {
+            DataInputStream dIns = new DataInputStream(new BufferedInputStream(new FileInputStream(path)));
+            char[] data = new char[dIns.available()];
+            String text = new String(dIns.readAllBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printBytes(){
+        data = text.toCharArray();
+        for (char c : data){
+            System.out.println((byte) c);
+        }
+    }
+}
+
+
