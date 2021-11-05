@@ -1,5 +1,6 @@
 package Arbeidskrav_8;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -17,7 +18,7 @@ public class Huffman {
 
     public static void main(String[] args) {
 
-        char[] charArray = "BCAADDDCCACACAC".toCharArray();
+        byte[] charArray = "BCAADDDCCACACAC".getBytes(StandardCharsets.UTF_8);
         int[] charfreq = frequency(charArray);
 
         PriorityQueue<HuffmanNode> nodeQueue = new PriorityQueue<>(charfreq.length, new HuffmanComparator());
@@ -63,19 +64,15 @@ public class Huffman {
 
     }
 
-    public static int[] frequency(char[] str) {
+    public static int[] frequency(byte[] str) {
         int[] freq = new int[256];
 
         for (int i = 0; i < str.length; i++) {
-            for (int j = 0; j < freq.length; j++) {
-                if ((int)str[i] == j) {
-                    freq[j]++;
-                }
-            }
+            freq[str[i]]++;
         }
 
         for (int i = 0; i < freq.length; i++) {
-            System.out.println((char)i + ": " + freq[i]);
+            System.out.println((byte)i + ": " + freq[i]);
         }
         return freq;
     }
