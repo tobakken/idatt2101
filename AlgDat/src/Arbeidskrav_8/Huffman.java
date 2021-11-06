@@ -1,34 +1,32 @@
 package Arbeidskrav_8;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Huffman {
-    public static void printCode(HuffmanNode root, String s) {
-        if (root.left == null && root.right == null && Character.isLetter(root.c)) {
 
-            System.out.println(root.c + "   |  " + s);
+    private int[] charFreq;
+    private byte[] data;
 
-            return;
-        }
-        printCode(root.left, s + "0");
-        printCode(root.right, s + "1");
+    public Huffman(byte[] data){
+        this.data = data;
+        charFreq = frequency(data);
     }
 
-    public static void main(String[] args) {
+    public HuffmanNode huffmanTree() {
 
-        byte[] charArray = "BCAADDDCCACACAC".getBytes(StandardCharsets.UTF_8);
-        int[] charfreq = frequency(charArray);
 
-        PriorityQueue<HuffmanNode> nodeQueue = new PriorityQueue<>(charfreq.length, new HuffmanComparator());
+        PriorityQueue<HuffmanNode> nodeQueue = new PriorityQueue<>(charFreq.length, new HuffmanComparator());
 
-        for (int i = 0; i < charfreq.length; i++) {
-            if (charfreq[i] != 0){
+        //Initialize and add all nodes to queue
+        for (int i = 0; i < charFreq.length; i++) {
+            if (charFreq[i] != 0){
                 HuffmanNode hn = new HuffmanNode();
 
                 hn.c = (char)i;
-                hn.value = charfreq[i];
+                hn.value = charFreq[i];
 
                 hn.left = null;
                 hn.right = null;
@@ -56,24 +54,46 @@ public class Huffman {
             f.right = y;
             root = f;
 
-            nodeQueue.add(f);
+            nodeQueue.add(root);
         }
-        System.out.println(" Char | Huffman code ");
-        System.out.println("--------------------");
-        printCode(root, "");
+        return root;
+    }
+    public String encode(HuffmanNode root, int value, String s) {
+        if (root == null) return null;
+        if (root.value == value) return s;
 
+        String huffCode = encode(root.left, value, (s + "0"));
+
+        if (!huffCode.isEmpty()) return huffCode;
+
+        return encode(root.right, value, s + "1");
+    }
+
+    public byte[] encodingArray(){
+        String[] encodings = new String[charFreq.length];
+        HuffmanNode root = huffmanTree();
+        for (int i = 0; i < charFreq.length; i++) {
+            encodings[i] = encode(root, i, "");
+        }
+        return encodingByteArray(encodings);
+    }
+
+    private byte[] encodingByteArray(String[] encodingArray){
+        byte[] encodedByteArray = new byte[encodingArray.length];
+
+        for (int i = 0; i < encodingArray.length; i++){
+            encodedByteArray[i] = (byte) Integer.parseInt(encodingArray[i]);
+        }
+        return encodedByteArray;
     }
 
     public static int[] frequency(byte[] str) {
         int[] freq = new int[256];
 
-        for (int i = 0; i < str.length; i++) {
-            freq[str[i]]++;
+        for (byte b : str) {
+            freq[b]++;
         }
 
-        for (int i = 0; i < freq.length; i++) {
-            System.out.println((byte)i + ": " + freq[i]);
-        }
         return freq;
     }
 }

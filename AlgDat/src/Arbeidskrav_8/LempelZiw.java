@@ -7,8 +7,11 @@ public class LempelZiw {
 
     private char[] data;
 
-    public LempelZiw(char[] data){
-        this.data = data;
+    public LempelZiw(byte[] dataBytes){
+        data = new char[dataBytes.length];
+        for (int i = 0; i < dataBytes.length; i++) {
+            data[i] = (char) dataBytes[i];
+        }
     }
 
 
