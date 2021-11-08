@@ -5,7 +5,11 @@ import java.util.Arrays;
 
 public class LempelZiw {
 
-    private char[] data;
+    private static final int BUFFERSIZE = (1<<11) - 1;
+    private static final int POINTERSIZE = (1<<4) - 1;
+    private static final int MIN_SIZE_POINTER = 4;
+    private final char[] data;
+
 
     public LempelZiw(byte[] dataBytes){
         data = new char[dataBytes.length];
@@ -13,7 +17,6 @@ public class LempelZiw {
             data[i] = (char) dataBytes[i];
         }
     }
-
 
     public byte[] lZ(){
         ArrayList<Byte> compressed = new ArrayList<>();
@@ -25,21 +28,22 @@ public class LempelZiw {
             if (pointer != null){
                 //If pointer found and no uncompressed bytes are stored, add the values of the pointer to the compressed file
                 if (!notCompressed.isEmpty()){
-                    compressed.add((byte) notCompressed.length());
+                    compressed.add((byte) (notCompressed.length()));
                     for (int c = 0; c < notCompressed.length(); c++){
-                        compressed.add((byte) notCompressed.charAt(i));
+                        compressed.add((byte) notCompressed.charAt(c));
                     }
                     notCompressed = new StringBuilder();
                 }
                 compressed.add((byte) (pointer.getDistance() >> 4 | (1<<7)));
-                compressed.add((byte) ((pointer.getDistance() & 0x0F) | ((pointer.getLength()) - 1)));
+                compressed.add((byte) ((pointer.getDistance() & 0x0F) | ((pointer.getLength() - 1))));
+                i += pointer.getLength();
             } else {
                 notCompressed.append(data[i]);
 
-                if (notCompressed.length() == 256){
-                    compressed.add((byte) ((notCompressed.length() + 256)% 256));
+                if (notCompressed.length() == 127){
+                    compressed.add((byte) (notCompressed.length()));
                     for (int c = 0; c < notCompressed.length(); c++){
-                        compressed.add((byte) notCompressed.charAt(i));
+                        compressed.add((byte) notCompressed.charAt(c));
                     }
                     notCompressed = new StringBuilder();
                 }
@@ -67,16 +71,17 @@ public class LempelZiw {
     public Pointer findPointer (int index){
         Pointer pointer = new Pointer();
 
-        int max = index + 4;
+        int max = index + POINTERSIZE;
         if (max > data.length - 1) max = data.length - 1;
 
-        int min = index - 256;
+        int min = index - BUFFERSIZE;
         if (min < 0) min = 0;
 
         char[] buffer = Arrays.copyOfRange(data, min, index);
 
-        int i = index + 3;
+        int i = index + MIN_SIZE_POINTER - 1;
 
+        outer:
         while (i < (max + 1)){
             char[] searchWord = Arrays.copyOfRange(data, index, i);
             int j = 0;
@@ -89,20 +94,53 @@ public class LempelZiw {
                     pointer.setDistance(buffer.length - j);
                     pointer.setLength(searchWord.length);
                     i++;
+                    continue outer;
                 }
                 else {
-                    int l = k-1;
+                    int l = k - 1;
                     while (l >= 0 && searchWord[l] != buffer[j+k]){
                         l--;
                     }
-                    j += k - 1;
+                    j += k + 1;
                 }
             }
+            break;
         }
         if (pointer.getDistance() > 0 && pointer.getLength() > 0) return pointer;
         return null;
     }
 
+    public byte[] deCompress(byte[] data){
+        ArrayList<Byte> b = new ArrayList<>();
+        int index = 0;
+
+        int i = 0;
+        while (i < data.length - 1){
+            byte condition = data[i];
+            if (condition >= 0){
+                for (int j = 0; j < condition; j++) {
+                    b.add(data[i + j + 1]);
+                }
+                index += condition;
+                i += condition + 1;
+            }
+            else {
+                int jump = ((condition & 127) << 4) | ((data[i + 1] >> 4) & POINTERSIZE);
+                int length = (data[i + 1] & 0x0F) + 1;
+
+                for (int j = 0; j < length; j++) {
+                    b.add(b.get(index - jump + j));
+                }
+                index += length;
+                i += 2;
+            }
+        }
+        byte[] deCompressed = new byte[b.size()];
+        for (int j = 0; j < b.size(); j++) {
+            deCompressed[j] = b.get(j);
+        }
+        return deCompressed;
+    }
 
 
 }
