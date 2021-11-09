@@ -9,7 +9,7 @@ public class Compression {
         compress(data, bytes);
         bytes.readNewFile("./testHuffman.txt");
         data = bytes.getData();
-        //deCompress(data, bytes);
+        deCompress(data, bytes);
 
     }
 

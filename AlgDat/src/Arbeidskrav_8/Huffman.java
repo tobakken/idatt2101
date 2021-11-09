@@ -1,6 +1,7 @@
 package Arbeidskrav_8;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -8,12 +9,14 @@ public class Huffman {
 
     private int[] charFreq;
     private byte[] data;
+    private String[] huffString;
     private HuffmanNode root;
     private ArrayList<Byte> decompressed;
 
     public Huffman(byte[] data){
         this.data = data;
         charFreq = frequency(data);
+        huffString = new String[256];
         this.root = huffmanTree();
         decompressed = new ArrayList<>();
     }
@@ -64,9 +67,14 @@ public class Huffman {
         int i = 0;
         int j;
         long currentByte = 0L;
-        String[] bitstrings = encodingArray();
+        encode(root, "");
         ArrayList<Byte> bytes = new ArrayList<>();
 
+        for (int k = 0; k < charFreq.length; k++) {
+            bytes.add((byte) charFreq[k]);
+        }
+
+        String[] bitstrings = huffString;
 
         for (int k = 0; k < data.length; k++) {
             input = data[k];
@@ -99,30 +107,29 @@ public class Huffman {
         return compressed;
     }
 
-    public String encode(HuffmanNode root, int value, String s) {
-        if (root == null) return "";
-        if (root.value == value) return s;
-
-        String huffCode = encode(root.left, value, (s + "0"));
-
-        if (!huffCode.equals("")) return huffCode;
-
-        return encode(root.right, value, s + "1");
+    public void encode(HuffmanNode root, String s) {
+        if (root.left == null && root.right == null){
+            huffString[root.c] = s;
+            return;
+        }
+        encode(root.left, s + "0");
+        encode(root.right, s + "1");
     }
 
-    public String[] encodingArray(){
+/*    public String[] encodingArray(){
         String[] encodings = new String[charFreq.length];
         for (int i = 0; i < charFreq.length; i++) {
-            encodings[i] = encode(root, i, "");
+            encodings[i] = encode(root, "");
         }
         return encodings;
-    }
+    }*/
 
     public int[] readFreqArray(byte[] compressedData){
         int[] freqArray = new int[256];
         for (int i = 0; i < freqArray.length; i++) {
             freqArray[i] = compressedData[i];
         }
+        data = Arrays.copyOfRange(data, 256, data.length);
         return freqArray;
     }
 
