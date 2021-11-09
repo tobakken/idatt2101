@@ -78,6 +78,7 @@ public class Huffman {
 
         for (int k = 0; k < data.length; k++) {
             input = data[k];
+            if (input < 0) input += 256;
             String bitstring = bitstrings[input];
             j = 0;
             while (j < bitstring.length()) {
@@ -116,14 +117,6 @@ public class Huffman {
         encode(root.right, s + "1");
     }
 
-/*    public String[] encodingArray(){
-        String[] encodings = new String[charFreq.length];
-        for (int i = 0; i < charFreq.length; i++) {
-            encodings[i] = encode(root, "");
-        }
-        return encodings;
-    }*/
-
     public int[] readFreqArray(byte[] compressedData){
         int[] freqArray = new int[256];
         for (int i = 0; i < freqArray.length; i++) {
@@ -153,7 +146,7 @@ public class Huffman {
         }
 
         if (lastbyte > 0) {
-            BitString b = new BitString(lastbyte, data[length + 1] >> (8 - lastbyte));
+            BitString b = new BitString(lastbyte, data[length] >> (8 - lastbyte));
             h = BitString.concat(h, b);
             writeCharactersTo(root, h);
         }

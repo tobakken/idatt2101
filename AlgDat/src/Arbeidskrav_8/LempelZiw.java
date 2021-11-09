@@ -7,7 +7,7 @@ public class LempelZiw {
 
     private static final int BUFFERSIZE = (1<<11) - 1;
     private static final int POINTERSIZE = (1<<4) - 1;
-    private static final int MIN_SIZE_POINTER = 4;
+    private static final int MIN_SIZE_POINTER = 5;
     private final char[] data;
 
 
@@ -23,19 +23,25 @@ public class LempelZiw {
 
         StringBuilder notCompressed = new StringBuilder();
 
-        for (int i = 0; i < data.length; ){
+        for (int i = 0; i < data.length;){
             Pointer pointer = findPointer(i);
             if (pointer != null){
                 //If pointer found and no uncompressed bytes are stored, add the values of the pointer to the compressed file
-                if (!notCompressed.isEmpty()){
+                if (notCompressed.length() != 0){
                     compressed.add((byte) (notCompressed.length()));
                     for (int c = 0; c < notCompressed.length(); c++){
                         compressed.add((byte) notCompressed.charAt(c));
                     }
                     notCompressed = new StringBuilder();
                 }
-                compressed.add((byte) (pointer.getDistance() >> 4 | (1<<7)));
-                compressed.add((byte) ((pointer.getDistance() & 0x0F) | ((pointer.getLength() - 1))));
+
+                //1DDD DDDD | DDDD LLLL
+
+                compressed.add((byte) (pointer.getDistance()*(-1)));
+                compressed.add((byte) pointer.getLength());
+
+                //compressed.add((byte) (pointer.getDistance() >> 4 | (1<<7)));
+                //compressed.add((byte) ((pointer.getDistance() & 0x0F) | ((pointer.getLength() - 1))));
                 i += pointer.getLength();
             } else {
                 notCompressed.append(data[i]);
@@ -125,8 +131,10 @@ public class LempelZiw {
                 i += condition + 1;
             }
             else {
-                int jump = ((condition & 127) << 4) | ((data[i + 1] >> 4) & POINTERSIZE);
-                int length = (data[i + 1] & 0x0F) + 1;
+                //int jump = ((condition & 127) << 4) | ((data[i + 1] >> 4) & POINTERSIZE);
+                //int length = (data[i + 1] & 0x0F) + 1;
+                int jump = condition*(-1);
+                int length = data[i + 1];
 
                 for (int j = 0; j < length; j++) {
                     b.add(b.get(index - jump + j));
