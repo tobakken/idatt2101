@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class LempelZiw {
 
-    private static final int BUFFERSIZE = (1<<11) - 1;
+    private static final int BUFFERSIZE = 127;
     private static final int POINTERSIZE = (1<<4) - 1;
     private static final int MIN_SIZE_POINTER = 5;
     private final char[] data;
@@ -35,13 +35,10 @@ public class LempelZiw {
                     notCompressed = new StringBuilder();
                 }
 
-                //1DDD DDDD | DDDD LLLL
 
                 compressed.add((byte) (pointer.getDistance()*(-1)));
                 compressed.add((byte) pointer.getLength());
 
-                //compressed.add((byte) (pointer.getDistance() >> 4 | (1<<7)));
-                //compressed.add((byte) ((pointer.getDistance() & 0x0F) | ((pointer.getLength() - 1))));
                 i += pointer.getLength();
             } else {
                 notCompressed.append(data[i]);
@@ -97,7 +94,7 @@ public class LempelZiw {
                     k--;
                 }
                 if (k < 0){
-                    pointer.setDistance(buffer.length - j);
+                    pointer.setDistance((short)(buffer.length - j));
                     pointer.setLength(searchWord.length);
                     i++;
                     continue outer;
@@ -154,13 +151,14 @@ public class LempelZiw {
 }
 
 class Pointer {
-    private int length, distance;
+    private int length;
+    private short distance;
 
     public Pointer(){
-        this(-1,-1);
+        this(-1,(short)-1);
     }
 
-    public Pointer (int matchLength, int jumpDist){
+    public Pointer (int matchLength, short jumpDist){
         this.length = matchLength;
         this.distance = jumpDist;
     }
@@ -177,7 +175,7 @@ class Pointer {
         this.length = length;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(short distance) {
         this.distance = distance;
     }
 }

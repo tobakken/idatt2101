@@ -4,35 +4,34 @@ import java.io.*;
 
 public class Compression {
     public static void main(String[] args) throws IOException {
-        Bytes bytes = new Bytes("./diverse.txt");
+        Bytes bytes = new Bytes("./test.txt");
         byte[] data = bytes.getData();
         compress(data, bytes);
-        bytes.readNewFile("./diverseLZ.txt");
+        bytes.readNewFile("./testHuff.txt");
         data = bytes.getData();
         deCompress(data, bytes);
 
     }
 
     public static void compress(byte[] data, Bytes bytes) throws IOException {
-        LempelZiw lempelZiw = new LempelZiw(data);
+/*        LempelZiw lempelZiw = new LempelZiw(data);
         byte[] compressedArrayLZ = lempelZiw.lZ();
-        bytes.writeToFile(compressedArrayLZ, "LZ");
-        //Huffman huffman = new Huffman(data);
-        //byte[] compressedHuffman = huffman.compressHuff();
+        bytes.writeToFile(compressedArrayLZ, "LZ");*/
+        Huffman huffman = new Huffman(data);
+        byte[] compressedHuffman = huffman.compressHuff();
 
-        //bytes.writeToFile(compressedHuffman, "Huffman");
+        bytes.writeToFile(compressedHuffman, "Huff");
     }
 
     public static void deCompress(byte[] data, Bytes bytes) throws IOException {
-        LempelZiw LZ = new LempelZiw(data);
-        byte[] deCompressedLZ = LZ.deCompress(data);
 
-/*        Huffman huffman = new Huffman(data);
+
+        Huffman huffman = new Huffman(data);
         byte[] deCompressedHuff = huffman.deCompress();
-
-        bytes.writeToFile(deCompressedHuff, "deCompressedHuff");*/
-
-        bytes.writeToFile(deCompressedLZ, "deCompressedLZ");
+        //bytes.writeToFile(deCompressedHuff, "deCompressedHuff");
+/*        LempelZiw LZ = new LempelZiw(deCompressedHuff);
+        byte[] deCompressedLZ = LZ.deCompress(data);*/
+        bytes.writeToFile(deCompressedHuff, "deCompressedHuff");
     }
 
 }
