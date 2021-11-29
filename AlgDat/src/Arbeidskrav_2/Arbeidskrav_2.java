@@ -1,3 +1,5 @@
+package Arbeidskrav_2;
+
 import java.util.Date;
 
 public class Arbeidskrav_2 {
