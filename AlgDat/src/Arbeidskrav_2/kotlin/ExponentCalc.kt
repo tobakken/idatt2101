@@ -22,6 +22,9 @@ fun main(){
 
     println("Nanoseconds for first method: $time1 \nResult: $res1")
     println("Nanoseconds for second method: $time2 \nResult:$res2")
+
+/*    val e = ExponentCalc()
+    e.hanoi(5, 'A', 'B', 'C')*/
 }
 
 class ExponentCalc {
@@ -34,5 +37,16 @@ class ExponentCalc {
         if (exp == 0) return 1.0
         if (exp % 2 != 0) return x * expCalc2(x * x, (exp - 1) / 2)
         return expCalc2(x * x, exp / 2)
+    }
+
+    //Tower of Hanoi
+    fun hanoi(n: Int, a: Char, b:Char, c:Char){
+        if (n <= 1){
+            println(a + " -> " + c)
+        } else {
+            hanoi(n-1, a, c, b)
+            println(a + " -> " + c)
+            hanoi(n-1, b, a, c)
+        }
     }
 }
