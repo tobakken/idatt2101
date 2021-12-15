@@ -1,4 +1,0 @@
-Rett m. kode: int main(){ println("ok");}
-
-
-
